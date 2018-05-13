@@ -20,7 +20,7 @@ trait WarriorEquippedNewWeapon {
 
 }
 
-final class WarriorEquippedNewWeaponImpl[Ctx <: IOContext](ctx: Ctx)(implicit repository: WarriorRepository[Future])
+final class WarriorEquippedNewWeaponImpl[Ctx <: IOContext](implicit repository: WarriorRepository[Future], ctx: Ctx)
   extends WarriorEquippedNewWeapon {
   def apply(warrior: Warrior, newWeapon: Weapon): ActionCont[UseCaseResult] =
     ActionCont { f =>
