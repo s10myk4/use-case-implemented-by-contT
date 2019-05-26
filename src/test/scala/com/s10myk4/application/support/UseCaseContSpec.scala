@@ -22,9 +22,11 @@ class UseCaseContSpec extends FlatSpec {
   it should "処理途中で異常系が発生した場合に処理を打ち切る" in {
     val res = for {
       a <- ContT[IO, String, String](f => f("a"))
-      b <- ContT[IO, String, String](_ => IO.raiseError(new Exception("b")))
-      c <- ContT[IO, String, String](f => f("c"))
-    } yield a + b + c
-    assertThrows[Exception](res.run(Applicative[IO].pure).unsafeRunSync())
+      b <- ContT[IO, String, String](f => f("b"))
+      c <- ContT[IO, String, String](_ => IO("break"))
+      d <- ContT[IO, String, String](f => f("d"))
+    } yield a + b + c + d
+    res.run(Applicative[IO].pure).map(r => assert(r == "break")).unsafeRunSync()
   }
+
 }

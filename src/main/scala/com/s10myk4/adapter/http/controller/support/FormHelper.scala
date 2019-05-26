@@ -20,6 +20,13 @@ private[http] trait FormHelper {
             a => f(a)
           )
       )
+
+    def bindEither[F[_]: Applicative](implicit req: Request[AnyContent]): F[Either[InvalidInputParameters, A]] = {
+      form.bindFromRequest.fold(
+        error => Applicative[F].pure(Left(InvalidInputParameters(errors = convertFormErrorsToMap(error.errors)))),
+        a => Applicative[F].pure(Right(a))
+      )
+    }
   }
 
   private def convertFormErrorsToMap(errors: Seq[FormError]): Map[String, String] = {

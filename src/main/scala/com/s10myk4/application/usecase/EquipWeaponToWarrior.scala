@@ -34,7 +34,7 @@ object EquipWeaponToWarrior {
       weapon: Weapon
   )
 
-  private implicit def toUseCaseResult(domainErrors: NonEmptyList[WarriorError]): UseCaseResult = {
+  implicit def toUseCaseResult(domainErrors: NonEmptyList[WarriorError]): AbnormalCase = {
     val errors = domainErrors.toList.toSet
     errors match {
       case _ if errors == Set(DifferentAttributeError, NotOverLevelError) => DifferentAttributeAndNotOverLevel
